@@ -1,6 +1,7 @@
 package com.tps.challenge.dagger
 
 import com.tps.challenge.TCApplication
+import com.tps.challenge.features.storedetails.StoreDetailsFragment
 import com.tps.challenge.features.storefeed.StoreFeedFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -17,4 +18,5 @@ interface AppComponent {
 
     fun inject(app: TCApplication)
     fun inject(storeFeedFragment: StoreFeedFragment)
+    fun inject(storeDetailsFragment: StoreDetailsFragment)
 }

@@ -2,7 +2,7 @@ package com.tps.challenge.features.storefeed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tps.challenge.database.repository.StoreFeedRepository
+import com.tps.challenge.database.repository.StoreRepository
 import com.tps.challenge.network.model.StoreResponse
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class StoreFeedViewModel @Inject constructor (val repository: StoreFeedRepository ): ViewModel() {
+class StoreFeedViewModel @Inject constructor (val repository: StoreRepository ): ViewModel() {
 
     sealed class UiState{
         object Loading: UiState()

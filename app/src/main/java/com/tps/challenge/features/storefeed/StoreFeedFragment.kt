@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.tps.challenge.R
 import com.tps.challenge.TCApplication
 import com.tps.challenge.ViewModelFactory
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -59,14 +59,16 @@ class StoreFeedFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                when(state){
+                when (state) {
                     is StoreFeedViewModel.UiState.Loading -> {
                         swipeRefreshLayout.isRefreshing = true
                     }
+
                     is StoreFeedViewModel.UiState.Success -> {
                         swipeRefreshLayout.isRefreshing = false
                         storeFeedAdapter.loadStores(state.stores)
                     }
+
                     is StoreFeedViewModel.UiState.Error -> {
                         swipeRefreshLayout.isRefreshing = false
                         Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
@@ -83,12 +85,20 @@ class StoreFeedFragment : Fragment() {
             viewModel.onEvent(StoreFeedViewModel.Event.RefreshRequested)
         }
 
-        storeFeedAdapter = StoreFeedAdapter()
+        storeFeedAdapter = StoreFeedAdapter { storeId ->
+            navigateToStoreDetails(storeId)
+        }
+
         recyclerView = view.findViewById(R.id.stores_view)
         recyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(activity)
-             adapter = storeFeedAdapter
+            adapter = storeFeedAdapter
         }
+    }
+
+    private fun navigateToStoreDetails(storeId: String) {
+        val action = StoreFeedFragmentDirections.actionStoreFeedToStoreDetails(storeId)
+        findNavController().navigate(action)
     }
 }

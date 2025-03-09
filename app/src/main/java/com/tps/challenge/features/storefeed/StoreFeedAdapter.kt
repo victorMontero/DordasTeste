@@ -13,11 +13,12 @@ import com.tps.challenge.network.model.StoreResponse
 /**
  * A RecyclerView.Adapter to populate the screen with a store feed.
  */
-class StoreFeedAdapter: RecyclerView.Adapter<StoreItemViewHolder>() {
+class StoreFeedAdapter(private val onStoreClicked: (String) -> Unit) :
+    RecyclerView.Adapter<StoreItemViewHolder>() {
 
     private val stores = mutableListOf<StoreResponse>()
 
-    fun loadStores(newStores: List<StoreResponse>){
+    fun loadStores(newStores: List<StoreResponse>) {
         stores.clear()
         stores.addAll(newStores)
         notifyDataSetChanged()
@@ -31,7 +32,7 @@ class StoreFeedAdapter: RecyclerView.Adapter<StoreItemViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: StoreItemViewHolder, position: Int) {
-        holder.bind(stores[position])
+        holder.bind(stores[position], onStoreClicked)
     }
 
     override fun getItemCount(): Int = stores.size
@@ -48,10 +49,14 @@ class StoreItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val coverImageView: ImageView = itemView.findViewById(R.id.storeImage)
 
 
-    fun bind(storeResponse: StoreResponse) {
+    fun bind(storeResponse: StoreResponse, onStoreClicked: (String) -> Unit) {
         nameTextView.text = storeResponse.name
         descriptionTextView.text = storeResponse.description
         etaTextView.text = storeResponse.status
+
+        itemView.setOnClickListener {
+            onStoreClicked(storeResponse.id)
+        }
 
         Glide.with(itemView.context)
             .load(storeResponse.coverImgUrl)

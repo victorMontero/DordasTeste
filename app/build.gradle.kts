@@ -2,13 +2,14 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
     compileSdk = 34
 
     kotlinOptions {
-        freeCompilerArgs = listOf("-Xjvm-default=compatibility")
+        freeCompilerArgs = listOf("-Xjvm-default=all-compatibility")
     }
 
     defaultConfig {
@@ -77,6 +78,10 @@ dependencies {
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     implementation("androidx.room:room-rxjava2:$roomVersion")
+
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.8.8")
+    implementation("androidx.navigation:navigation-ui-ktx:2.8.8")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

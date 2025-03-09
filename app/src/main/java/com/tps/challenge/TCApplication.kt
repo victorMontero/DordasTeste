@@ -23,10 +23,10 @@ class TCApplication : Application() {
     }
 
     private fun initDaggerAppComponent(): AppComponent {
-         appComponent =
-               DaggerAppComponent.builder()
-                         .appModule(AppModule(this))
-                         .build()
+        appComponent =
+            DaggerAppComponent.builder()
+                .appModule(AppModule(this))
+                .build()
         return appComponent
     }
 }
