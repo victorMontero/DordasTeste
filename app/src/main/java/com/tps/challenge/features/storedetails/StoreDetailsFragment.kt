@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -47,6 +48,9 @@ class StoreDetailsFragment : Fragment() {
     private lateinit var tagsChipGroup: ChipGroup
     private lateinit var progressBar: ProgressBar
 
+    private val args: StoreDetailsFragmentArgs by navArgs()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         TCApplication.getAppComponent().inject(this)
         super.onCreate(savedInstanceState)
@@ -65,10 +69,7 @@ class StoreDetailsFragment : Fragment() {
 
         initializeViews(view)
 
-        val storeId = arguments?.getString(ARG_STORE_ID)
-            ?: throw IllegalArgumentException("Store ID is required")
-
-        viewModel.processIntent(StoreDetailsViewModel.StoreDetailsIntent.LoadStoreDetails(storeId))
+        viewModel.processIntent(StoreDetailsViewModel.StoreDetailsIntent.LoadStoreDetails(args.storeId))
         observeViewModel()
     }
 
