@@ -16,6 +16,7 @@ import com.google.android.material.chip.ChipGroup
 import com.tps.challenge.R
 import com.tps.challenge.TCApplication
 import com.tps.challenge.ViewModelFactory
+import com.tps.challenge.core.ui.UiState
 import com.tps.challenge.network.model.StoreDetailsResponse
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,7 +68,7 @@ class StoreDetailsFragment : Fragment() {
         val storeId = arguments?.getString(ARG_STORE_ID)
             ?: throw IllegalArgumentException("Store ID is required")
 
-        viewModel.onEvent(StoreDetailsViewModel.Event.LoadStoreDetails(storeId))
+        viewModel.processIntent(StoreDetailsViewModel.StoreDetailsIntent.LoadStoreDetails(storeId))
         observeViewModel()
     }
 
@@ -86,15 +87,17 @@ class StoreDetailsFragment : Fragment() {
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
-                when(state) {
-                    is StoreDetailsViewModel.UiState.Loading -> {
+                when (state) {
+                    is UiState.Loading -> {
                         showLoading(true)
                     }
-                    is StoreDetailsViewModel.UiState.Success -> {
+
+                    is UiState.Success -> {
                         showLoading(false)
-                        updateUI(state.storeDetails)
+                        updateUI(state.data)
                     }
-                    is StoreDetailsViewModel.UiState.Error -> {
+
+                    is UiState.Error -> {
                         showLoading(false)
                         showError(state.message)
                     }

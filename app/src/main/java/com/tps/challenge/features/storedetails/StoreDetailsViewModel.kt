@@ -2,13 +2,17 @@ package com.tps.challenge.features.storedetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tps.challenge.core.ui.Intent
+import com.tps.challenge.core.ui.UiState
 import com.tps.challenge.database.repository.StoreRepository
+import com.tps.challenge.network.ApiResult
 import com.tps.challenge.network.model.StoreDetailsResponse
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -18,49 +22,47 @@ class StoreDetailsViewModel @Inject constructor(
     private val repository: StoreRepository
 ) : ViewModel() {
 
-    sealed class UiState {
-        object Loading : UiState()
-        data class Success(val storeDetails: StoreDetailsResponse) : UiState()
-        data class Error(val message: String) : UiState()
+    sealed class StoreDetailsIntent : Intent {
+        data class LoadStoreDetails(val storeId: String) : StoreDetailsIntent()
     }
 
-    sealed class Event {
-        data class LoadStoreDetails(val storeId: String) : Event()
-    }
-
-    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
-    val uiState: StateFlow<UiState> = _uiState
+    private val _uiState = MutableStateFlow<UiState<StoreDetailsResponse>>(UiState.Loading)
+    val uiState: StateFlow<UiState<StoreDetailsResponse>> = _uiState
 
     private var currentStoreId: String? = null
 
-    fun onEvent(event: Event) {
-        when (event) {
-            is Event.LoadStoreDetails -> {
-                currentStoreId = event.storeId
-                loadStoreDetails(event.storeId)
+    fun processIntent(intent: Intent) {
+        when (intent) {
+            is StoreDetailsIntent.LoadStoreDetails -> {
+                currentStoreId = intent.storeId
+                loadStoreDetails(intent.storeId)
             }
         }
     }
 
     private fun loadStoreDetails(storeId: String) {
-        viewModelScope.launch {
-            _uiState.update {
-                UiState.Loading
+        repository.getStoreDetails(storeId)
+            .onEach { result ->
+                when (result) {
+                    is ApiResult.Loading -> {
+                        _uiState.update { UiState.Loading }
+                    }
+
+                    is ApiResult.Success -> {
+                        _uiState.update { UiState.Success(result.data) }
+                    }
+
+                    is ApiResult.Error -> {
+                        _uiState.update {
+                            UiState.Error(
+                                result.message.message ?: "Failed to load stores",
+                                result.message.cause
+                            )
+                        }
+                    }
+                }
             }
-            repository.getStoreDetails(storeId)
-                .onSuccess { details ->
-                    _uiState.update {
-                        UiState.Success(details)
-                    }
-                }
-                .onFailure { exception ->
-                    _uiState.update {
-                        UiState.Error(
-                            exception.message ?: "Failed to load store details"
-                        )
-                    }
-                }
-        }
+            .launchIn(viewModelScope)
     }
 
     override fun onCleared() {

@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.tps.challenge.R
 import com.tps.challenge.TCApplication
 import com.tps.challenge.ViewModelFactory
+import com.tps.challenge.core.ui.UiState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -60,16 +61,16 @@ class StoreFeedFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collect { state ->
                 when (state) {
-                    is StoreFeedViewModel.UiState.Loading -> {
+                    is UiState.Loading -> {
                         swipeRefreshLayout.isRefreshing = true
                     }
 
-                    is StoreFeedViewModel.UiState.Success -> {
+                    is UiState.Success -> {
                         swipeRefreshLayout.isRefreshing = false
-                        storeFeedAdapter.loadStores(state.stores)
+                        storeFeedAdapter.loadStores(state.data)
                     }
 
-                    is StoreFeedViewModel.UiState.Error -> {
+                    is UiState.Error -> {
                         swipeRefreshLayout.isRefreshing = false
                         Toast.makeText(context, state.message, Toast.LENGTH_LONG).show()
                     }
@@ -82,7 +83,7 @@ class StoreFeedFragment : Fragment() {
         swipeRefreshLayout = view.findViewById(R.id.swipe_container)
         swipeRefreshLayout.isEnabled = true
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.onEvent(StoreFeedViewModel.Event.RefreshRequested)
+            viewModel.processIntent(StoreFeedViewModel.StoreFeedIntent.RefreshStores)
         }
 
         storeFeedAdapter = StoreFeedAdapter { storeId ->
