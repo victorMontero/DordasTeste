@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Technical Challenge</string>
+    <string name="content_cover_image">Company\'s logo</string>
+    <string name="chips_title">Categories</string>
+    <string name="delivery_eta_format">Delivery ETA: %1$s</string>
+    <string name="delivery_fee">Delivery fee: $%.2f</string>
+    <string name="phone_store">Phone: %1$s</string>
 </resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/storeFeedFragment">
+
+    <fragment
+        android:id="@+id/storeFeedFragment"
+        android:name="com.tps.challenge.features.storefeed.StoreFeedFragment"
+        android:label="StoreFeedFragment"
+        tools:layout="@layout/fragment_store_feed">
+        <action
+            android:id="@+id/action_storeFeedFragment_to_storeDetailsFragment"
+            app:destination="@id/storeDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/storeDetailsFragment"
+        android:name="com.tps.challenge.features.storedetails.StoreDetailsFragment"
+        android:label="Store Details"
+        tools:layout="@layout/fragment_store_details">
+        <argument
+            android:name="storeId"
+            app:argType="string" />
+    </fragment>
+</navigation>
