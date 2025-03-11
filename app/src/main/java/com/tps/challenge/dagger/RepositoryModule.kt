@@ -1,7 +1,8 @@
 package com.tps.challenge.dagger
 
-import com.tps.challenge.network.repository.storepository.StoreRepository
 import com.tps.challenge.network.TPSCoroutineService
+import com.tps.challenge.network.repository.storepository.StoreRepository
+import com.tps.challenge.network.repository.storepository.StoreRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -12,6 +13,6 @@ class RepositoryModule {
     @Singleton
     @Provides
     fun providesStoreFeedRepository(service: TPSCoroutineService): StoreRepository {
-        return StoreRepository(service)
+        return StoreRepositoryImpl(service)
     }
 }
