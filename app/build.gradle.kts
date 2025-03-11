@@ -28,6 +28,10 @@ android {
             proguardFile(file("proguard-rules.pro"))
         }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
