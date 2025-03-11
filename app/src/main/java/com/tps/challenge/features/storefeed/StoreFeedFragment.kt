@@ -81,12 +81,11 @@ class StoreFeedFragment : Fragment() {
     }
 
     private fun setupViews() {
-        binding.swipeContainer.isEnabled = true
         binding.swipeContainer.setOnRefreshListener {
             viewModel.processIntent(StoreFeedViewModel.StoreFeedIntent.RefreshStores)
         }
 
-//        storeFeedAdapter = StoreFeedAdapter { }
+        storeFeedAdapter = StoreFeedAdapter()
 
         binding.storesView.apply {
             setHasFixedSize(true)
