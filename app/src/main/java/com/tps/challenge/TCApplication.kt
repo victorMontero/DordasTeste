@@ -1,9 +1,9 @@
 package com.tps.challenge
 
 import android.app.Application
-import com.tps.challenge.dagger.AppComponent
-import com.tps.challenge.dagger.AppModule
-import com.tps.challenge.dagger.DaggerAppComponent
+import com.tps.challenge.di.AppComponent
+import com.tps.challenge.di.AppModule
+import com.tps.challenge.di.DaggerAppComponent
 
 /**
  * The application class - an entry point into our app where we initialize Dagger.

@@ -2,7 +2,7 @@ package com.tps.challenge
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.tps.challenge.features.storefeed.StoreFeedFragment
+import com.tps.challenge.ui.features.storefeed.StoreFeedFragment
 
 /**
  * The initial Activity for the app.
